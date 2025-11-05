@@ -50,23 +50,32 @@ const Upload = () => {
       setStatusText('Preparing data...');
 
       const uuid = generateUUID();
-      const data = {
-        id: uuid,
-        resumePath: uploadFile.path,
-        imagePath: uploadedImage.path,
-        companyName,
-        jobTitle, jobDescription,
-        feedback: '',
-      }    
 
-      await kv.set(`resume: ${uuid}`, JSON.stringify(data));
+setStatusText('Analyzing...');
 
-      setStatusText('Analyzing...');
 const feedback = await ai.feedback(
   uploadFile.path,
-  
-  prepareInstructions({ jobTitle, jobDescription, AIResponseFormat })
+  prepareInstructions({ jobTitle, jobDescription, AIResponseFormat }),
 );
+
+// Once feedback is ready, then save everything to kv
+const data = {
+  id: uuid,
+  resumePath: uploadFile.path,
+  imagePath: uploadedImage.path,
+  companyName,
+  jobTitle,
+  jobDescription,
+  feedback,
+};
+
+await kv.set(`resume:${uuid}`, JSON.stringify(data));
+
+setStatusText('Analysis complete, redirecting...');
+navigate(`/resume/${uuid}`);
+
+
+
 
 if(!feedback) return setStatusText('Error: Failed to analyze the resume');
 
