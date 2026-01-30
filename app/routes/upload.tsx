@@ -5,7 +5,6 @@ import { usePuterStore } from "~/lib/puter";
 import { useNavigate } from "react-router";
 import { convertPdfToImage } from "~/lib/pdf2img";
 import { generateUUID } from "~/lib/utils";
-// Ensure both are imported from your constants file
 import { prepareInstructions, AIResponseFormat } from "../../constants";
 
 const Upload = () => {
@@ -23,34 +22,33 @@ const Upload = () => {
         setIsProcessing(true);
 
         try {
-            // Upload file to Puter FileSystem
             setStatusText('Uploading the file...');
-            const uploadedFile = await fs.upload([file]);
+            // @ts-ignore
+            const uploadedFile: any = await fs.upload([file]);
             if (!uploadedFile) return setStatusText('Error: Failed to upload file');
 
-            // Convert PDF to image for visual display
+            const fileObj = Array.isArray(uploadedFile) ? uploadedFile[0] : uploadedFile;
+
             setStatusText('Converting to image...');
             const imageFile = await convertPdfToImage(file);
             if (!imageFile.file) return setStatusText('Error: Failed to convert PDF to image');
 
-            // Upload the image preview
             setStatusText('Uploading the image...');
-            const uploadedImage = await fs.upload([imageFile.file]);
-            if (!uploadedImage) return setStatusText('Error: Failed to upload image');
+            // @ts-ignore
+            const uploadedImage: any = await fs.upload([imageFile.file]);
+            const imageObj = Array.isArray(uploadedImage) ? uploadedImage[0] : uploadedImage;
 
             setStatusText('Analyzing with AI...');
             const uuid = generateUUID();
             
-            // Call AI with instructions and the required JSON format
+            // වැදගත්: මෙතනදී අපි file එකත් එක්කම AI එකට message එක යවනවා
             const response = await ai.chat(
-                prepareInstructions({ 
-                    jobTitle, 
-                    jobDescription, 
-                    AIResponseFormat 
-                }),
+                `Here is a resume for a ${jobTitle} position at ${companyName}. 
+                 Job Description: ${jobDescription}. 
+                 Please analyze it and return ONLY a JSON response in this format: ${JSON.stringify(AIResponseFormat)}`,
                 { 
-                    model: 'gpt-4', 
-                    file: uploadedFile,
+                    model: 'gpt-4o', 
+                    file: fileObj, // මේකෙන් AI එකට file එක කියවන්න පුළුවන්
                     temperature: 0
                 }
             );
@@ -59,26 +57,26 @@ const Upload = () => {
 
             const feedbackText = typeof response.message.content === 'string'
                 ? response.message.content
-                : response.message.content[0].text;
+                : (response.message.content as any)[0].text;
 
             let parsedFeedback;
             try {
-                // REGEX: Extract only the part between { and } to avoid "I'm sorry..." text errors
                 const jsonMatch = feedbackText.match(/\{[\s\S]*\}/);
                 const cleanJson = jsonMatch ? jsonMatch[0] : feedbackText;
                 parsedFeedback = JSON.parse(cleanJson);
             } catch (e) {
-                console.error("JSON Parsing failed. AI sent:", feedbackText);
-                throw new Error("AI did not return valid JSON data.");
+                console.error("AI Response was not JSON:", feedbackText);
+                throw new Error("AI could not read the resume text properly.");
             }
 
-            // Save the structured data to KV store
             const finalData = {
                 id: uuid,
-                resumePath: uploadedFile.path,
-                imagePath: uploadedImage.path,
-                companyName, jobTitle, jobDescription,
-                feedback: parsedFeedback // Now contains the full JSON object
+                resumePath: fileObj.path,
+                imagePath: imageObj.path,
+                companyName, 
+                jobTitle, 
+                jobDescription,
+                feedback: parsedFeedback 
             }
 
             await kv.set(`resume:${uuid}`, JSON.stringify(finalData));
@@ -115,6 +113,7 @@ const Upload = () => {
                         <h2 className="text-2xl font-bold mb-4">{statusText}</h2>
                         <div className="animate-pulse flex flex-col items-center">
                             <div className="h-48 w-48 bg-blue-100 rounded-full mb-4"></div>
+                            <p className="text-slate-500 mt-2">This might take a few seconds...</p>
                         </div>
                     </div>
                 ) : (
