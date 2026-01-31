@@ -1,87 +1,32 @@
-# Welcome to React Router!
+# 🚀 Resumind - AI Powered Resume Analyzer
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Resumind is a modern web application designed to help job seekers optimize their resumes using Artificial Intelligence. It provides real-time scoring, ATS compatibility checks, and detailed improvement suggestions.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
 
-## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## ✨ Features
 
-## Getting Started
+* **AI Analysis:** Get a professional score for your resume content, structure, and style.
+* **ATS Compatibility:** Check how well your resume performs against Applicant Tracking Systems.
+* **Detailed Feedback:** Receive actionable suggestions to improve each section of your resume.
+* **Live Preview:** View your uploaded resume alongside the AI analysis report.
+* **Modern UI:** Clean, responsive, and user-friendly interface built with React and Tailwind CSS.
 
-### Installation
+## 🛠️ Tech Stack
 
-Install the dependencies:
+* **Frontend:** React.js, TypeScript, Tailwind CSS.
+* **Backend/Hosting:** Puter.com (Cloud Computing & AI Services).
+* **Deployment:** Puter App Service.
 
-```bash
-npm install
-```
+## 🚀 Live Demo
 
-### Development
+Check out the live application here: [https://resume-ai.puter.site/](https://resume-ai.puter.site/)
 
-Start the development server with HMR:
+## 📦 Installation & Setup
 
-```bash
-npm run dev
-```
+If you want to run this project locally, follow these steps:
 
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/YOUR_GITHUB_USERNAME/AI-Resume-Analyzer.git](https://github.com/YOUR_GITHUB_USERNAME/AI-Resume-Analyzer.git)
+   cd AI-Resume-Analyzer
